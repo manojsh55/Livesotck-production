@@ -1,1 +1,9 @@
 
+FAOSTAT_data_en_8.4.2023 <- read.csv("C:/Users/Manoj/OneDrive - Kansas State University/Meat production and supply chain in Nepal/Data/FAOSTAT_data_en_8-4-2023.csv")
+
+enteric <- read.csv("C:/Users/Manoj/OneDrive - Kansas State University/Meat production and supply chain in Nepal/Data/FAOSTAT_data_en_8-4-2023.csv")
+
+world <- enteric %>% select(Area, Element, Item, Year, Value) %>% filter(Year == 2020, Area == "World", Element == "Emissions (CH4)") 
+
+world_graph <- ggplot(world, aes(Item, Value)) + geom_col(fill = geom_col(fill = "#6F4E37")) + coord_flip() + theme_minimal() +  labs(title = "", x = "" , y = "Methane Emissions") 
+new_world <- data.frame(item= c("Buffalo", "Cattle", "Goats", "Sheep", "Others"), value = c(world[2, 5], world[5, 5] + world[4, 5], world[6, 5], world[10,5], sum(world$Value) - world[2, 5])- world[5, 5] - world[4, 5] - world[6, 5] - world[10,5])
