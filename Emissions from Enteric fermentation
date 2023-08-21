@@ -1,9 +1,71 @@
 
 FAOSTAT_data_en_8.4.2023 <- read.csv("C:/Users/Manoj/OneDrive - Kansas State University/Meat production and supply chain in Nepal/Data/FAOSTAT_data_en_8-4-2023.csv")
 
+data_nepal <- FAOSTAT_data_en_8.4.2023 %>% select(Domain, Area, Element, Item.Code, Item, Year, Value) %>% filter(Area %in% c("Nepal", "Southern Asia", "World" ), Year %in% 1990:2020) %>% pivot_longer()
+
+FAOSTAT_data_en_8.21.2023 %>%
+ filter(Area %in% "Nepal") %>%
+ filter(Element %in% "Emissions (CH4)") %>%
+ filter(Year.Code >= 1990L & Year.Code <= 2020L) %>%
+ filter(Year >= 1990L & Year <= 2020L) %>%
+ ggplot() +
+  aes(x = Year, y = Value, group = Element) +
+  geom_line(colour = "#112446") +
+  theme_minimal()
+
+
+
+
+FAOSTAT_data_en_8.21.2023 %>%
+ filter(!(Area %in% "World")) %>%
+ filter(Element %in% "Emissions (CH4)") %>%
+ filter(Year.Code >= 1990L & Year.Code <= 2020L) %>%
+ filter(Year >= 1990L & Year <= 2020L) %>%
+ ggplot() +
+  aes(x = Year, y = Value, colour = Area) +
+  geom_line() +
+  scale_color_hue(direction = 1) +
+  theme_minimal()
+
+
+##GGPLOT using facet_wrap ##
+
+FAOSTAT_data_en_8.21.2023 %>%
+ filter(Element %in% "Emissions (CH4)") %>%
+ filter(Year >= 1990L & Year <= 
+ 2020L) %>%
+ ggplot() +
+  aes(x = Year, y = Value, colour = Element) +
+  geom_point(shape = "circle", size = 2.05) +
+  geom_smooth(span = 0.75) +
+  scale_color_hue(direction = 1) +
+  labs(y = "Emissions of CH4 (Kilo tons)") +
+  theme_gray() +
+  theme(legend.position = "bottom") +
+  facet_wrap(vars(Area), scales = "free")
+
+
 enteric <- read.csv("C:/Users/Manoj/OneDrive - Kansas State University/Meat production and supply chain in Nepal/Data/FAOSTAT_data_en_8-4-2023.csv")
 
 world <- enteric %>% select(Area, Element, Item, Year, Value) %>% filter(Year == 2020, Area == "World", Element == "Emissions (CH4)") 
 
 world_graph <- ggplot(world, aes(Item, Value)) + geom_col(fill = geom_col(fill = "#6F4E37")) + coord_flip() + theme_minimal() +  labs(title = "", x = "" , y = "Methane Emissions") 
 new_world <- data.frame(item= c("Buffalo", "Cattle", "Goats", "Sheep", "Others"), value = c(world[2, 5], world[5, 5] + world[4, 5], world[6, 5], world[10,5], sum(world$Value) - world[2, 5])- world[5, 5] - world[4, 5] - world[6, 5] - world[10,5])
+
+
+
+FAOSTAT_data_en_8.21.2023 %>%
+ filter(!(Area %in% "World")) %>%
+ filter(Element %in% "Emissions (CH4)") %>%
+ filter(Year >= 1990L & Year <= 2020L) %>%
+ ggplot() +
+  aes(x = Year, y = Value) +
+  geom_point(
+    shape = "circle",
+    size = 2.05,
+    colour = "#112446"
+  ) +
+  geom_smooth(span = 0.75) +
+  labs(y = "Emissions of CH4 (Kilo tons)") +
+  theme_gray() +
+  facet_wrap(vars(Area), scales = "free")
